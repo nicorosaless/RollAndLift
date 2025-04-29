@@ -1,6 +1,6 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { save_user } from '../../backend/mongo_handler';
 
 interface User {
   id: string;
@@ -47,6 +47,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           email
         };
         
+        // Save user to MongoDB
+        save_user(mockUser);
+
         setUser(mockUser);
         localStorage.setItem('user', JSON.stringify(mockUser));
         return true;
