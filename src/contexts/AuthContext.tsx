@@ -1,6 +1,7 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { save_user } from '../../backend/mongo_handler';
+import { saveUser } from '../services/api';
 
 interface User {
   id: string;
@@ -47,8 +48,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           email
         };
         
-        // Save user to MongoDB
-        save_user(mockUser);
+        // Save user to MongoDB through our API service
+        await saveUser(mockUser);
 
         setUser(mockUser);
         localStorage.setItem('user', JSON.stringify(mockUser));
@@ -69,6 +70,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       username: 'tester',
       email: 'test@example.com'
     };
+    
+    // We're not awaiting this in quickLogin since it's for testing only
+    saveUser(mockUser).catch(err => console.error('Error in quickLogin:', err));
     
     setUser(mockUser);
     localStorage.setItem('user', JSON.stringify(mockUser));

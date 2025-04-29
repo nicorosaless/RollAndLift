@@ -92,7 +92,7 @@ const LoginPage = () => {
           <div>
             <Button 
               type="submit" 
-              className="button-primary w-full" 
+              className="bg-white text-black hover:bg-gray-100 w-full" 
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Iniciando sesión...' : 'Iniciar sesión'}
@@ -113,7 +113,7 @@ const LoginPage = () => {
           <Button 
             type="button"
             onClick={quickLogin}
-            className="mt-4 button-secondary w-full"
+            className="mt-4 bg-gray-700 hover:bg-gray-600 text-white w-full"
           >
             Acceso rápido (modo prueba)
           </Button>
