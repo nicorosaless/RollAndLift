@@ -64,8 +64,8 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				trblack: '#1E1E1E',
-				trwhite: '#E0E0E0',
-				traccent: '#00BCD4',
+				trwhite: '#FFFFFF',
+				traccent: '#FFFFFF',
 				trgray: {
 					light: '#A0A0A0',
 					mid: '#505050',

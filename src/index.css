@@ -8,32 +8,32 @@
 @layer base {
   :root {
     --background: 0 0% 12%;
-    --foreground: 0 0% 88%;
+    --foreground: 0 0% 98%;
 
     --card: 0 0% 15%;
-    --card-foreground: 0 0% 88%;
+    --card-foreground: 0 0% 98%;
 
     --popover: 0 0% 15%;
-    --popover-foreground: 0 0% 88%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 187 100% 42%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 12%;
 
     --secondary: 0 0% 20%;
-    --secondary-foreground: 0 0% 88%;
+    --secondary-foreground: 0 0% 98%;
 
     --muted: 0 0% 20%;
     --muted-foreground: 0 0% 60%;
 
-    --accent: 187 100% 42%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 0 0% 100%;
+    --accent-foreground: 0 0% 12%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
     --border: 0 0% 25%;
     --input: 0 0% 25%;
-    --ring: 187 100% 42%;
+    --ring: 0 0% 100%;
 
     --radius: 0.5rem;
   }
@@ -49,7 +49,7 @@
 
 @layer components {
   .tab-active {
-    @apply text-traccent border-b-2 border-traccent;
+    @apply text-trwhite border-b-2 border-trwhite;
   }
   
   .tab-inactive {
@@ -61,14 +61,15 @@
   }
   
   .input-field {
-    @apply bg-secondary text-trwhite border-trgray-mid rounded-md px-3 py-2 focus:ring-1 focus:ring-traccent focus:outline-none;
+    @apply bg-secondary text-trwhite border-trgray-mid rounded-md px-3 py-2 focus:ring-1 focus:ring-trwhite focus:outline-none;
   }
   
   .button-primary {
-    @apply bg-traccent text-black font-medium px-4 py-2 rounded-md hover:opacity-90 transition-opacity;
+    @apply bg-trwhite text-black font-medium px-4 py-2 rounded-md hover:opacity-90 transition-opacity;
   }
   
   .button-secondary {
     @apply bg-trgray-mid text-trwhite px-4 py-2 rounded-md hover:bg-trgray-light transition-colors;
   }
 }
+
