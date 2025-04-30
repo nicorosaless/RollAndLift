@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -6,6 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import MainLayout from "./components/layout/MainLayout";
 import GymPage from "./pages/GymPage";
 import JiuJitsuPage from "./pages/JiuJitsuPage";
+import TechniqueDetailPage from "./pages/TechniqueDetailPage";
 import NotFound from "./pages/NotFound";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
@@ -41,6 +43,13 @@ const App = () => (
               <ProtectedRoute>
                 <MainLayout>
                   <JiuJitsuPage />
+                </MainLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/jiujitsu/technique/:id" element={
+              <ProtectedRoute>
+                <MainLayout>
+                  <TechniqueDetailPage />
                 </MainLayout>
               </ProtectedRoute>
             } />

@@ -1,5 +1,7 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ChevronRight, FolderOpen, Folder } from 'lucide-react';
 
 interface Technique {
   id: string;
@@ -15,6 +17,7 @@ interface TechniqueTreeProps {
 
 const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechnique }) => {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const navigate = useNavigate();
 
   const toggleExpand = (id: string) => {
     if (expandedItems.includes(id)) {
@@ -24,24 +27,47 @@ const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechn
     }
   };
 
+  const handleTechniqueClick = (technique: Technique) => {
+    if (technique.videoIds?.length) {
+      onSelectTechnique(technique.id);
+      // Navigate to the technique detail page
+      navigate(`/jiujitsu/technique/${technique.id}`);
+    }
+  };
+
   const renderTechnique = (technique: Technique, depth = 0) => {
     const hasChildren = technique.children && technique.children.length > 0;
     const isExpanded = expandedItems.includes(technique.id);
+    const hasTechniqueVideos = technique.videoIds && technique.videoIds.length > 0;
     
     return (
       <div key={technique.id} className="mb-1">
         <div 
-          className={`flex items-center py-2 px-3 rounded-md ${depth > 0 ? 'ml-4' : ''} 
-            ${technique.videoIds?.length ? 'cursor-pointer hover:bg-secondary' : ''}`}
+          className={`flex items-center py-2 px-3 rounded-lg transition-all duration-200 ${depth > 0 ? 'ml-6' : ''} 
+            ${hasTechniqueVideos ? 'cursor-pointer hover:bg-secondary/80' : ''}`}
           onClick={() => {
-            if (technique.videoIds?.length) {
-              onSelectTechnique(technique.id);
+            if (hasTechniqueVideos) {
+              handleTechniqueClick(technique);
             }
             if (hasChildren) {
               toggleExpand(technique.id);
             }
           }}
         >
+          {/* Icon based on technique type */}
+          <div className="mr-2 text-trgray-light">
+            {hasChildren ? (
+              isExpanded ? (
+                <FolderOpen size={18} className="text-trwhite" />
+              ) : (
+                <Folder size={18} />
+              )
+            ) : (
+              <div className="w-[18px]" /> // Empty space for alignment
+            )}
+          </div>
+          
+          {/* Expansion arrow for items with children */}
           {hasChildren && (
             <button 
               className="mr-2 text-trgray-light hover:text-trwhite focus:outline-none"
@@ -50,31 +76,31 @@ const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechn
                 toggleExpand(technique.id);
               }}
             >
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                className={`h-4 w-4 transform transition-transform ${isExpanded ? 'rotate-90' : ''}`}
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
+              <ChevronRight 
+                size={16}
+                className={`transform transition-transform ${isExpanded ? 'rotate-90' : ''}`}
+              />
             </button>
           )}
           
-          <span className={technique.videoIds?.length ? 'text-traccent' : ''}>
+          {/* Technique name */}
+          <span 
+            className={`${hasTechniqueVideos ? 'text-traccent font-medium' : 'text-trwhite'}`}
+          >
             {technique.name}
           </span>
           
-          {technique.videoIds && technique.videoIds.length > 0 && (
+          {/* Video count badge */}
+          {hasTechniqueVideos && (
             <span className="ml-2 bg-traccent text-black text-xs px-2 py-0.5 rounded-full">
               {technique.videoIds.length}
             </span>
           )}
         </div>
         
+        {/* Children techniques */}
         {hasChildren && isExpanded && (
-          <div className="border-l border-trgray-mid ml-3 pl-1">
+          <div className="border-l-2 border-trgray-mid ml-4 pl-2 animate-fade-in">
             {technique.children!.map(child => renderTechnique(child, depth + 1))}
           </div>
         )}

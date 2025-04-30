@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SearchBar from '../components/jiujitsu/SearchBar';
 import VideoCard from '../components/jiujitsu/VideoCard';
 import TechniqueTree from '../components/jiujitsu/TechniqueTree';
@@ -12,6 +13,7 @@ const JiuJitsuPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTechniqueId, setSelectedTechniqueId] = useState<string | null>(null);
   const [techniques] = useState<Technique[]>(sampleTechniques);
+  const navigate = useNavigate();
 
   // Handle search functionality
   const handleSearch = (query: string) => {
@@ -62,10 +64,10 @@ const JiuJitsuPage = () => {
     <div>
       <h1 className="text-2xl font-bold mb-6">Lift & Roll - Jiu-Jitsu</h1>
       
-      <Tabs defaultValue="search" className="w-full mb-6">
+      <Tabs defaultValue="techniques" className="w-full mb-6">
         <TabsList className="grid grid-cols-2 mb-4">
-          <TabsTrigger value="search">Search Videos</TabsTrigger>
-          <TabsTrigger value="techniques">Techniques Roadmap</TabsTrigger>
+          <TabsTrigger value="search">Buscar Videos</TabsTrigger>
+          <TabsTrigger value="techniques">Técnicas</TabsTrigger>
         </TabsList>
         
         <TabsContent value="search" className="mt-0">
@@ -75,13 +77,13 @@ const JiuJitsuPage = () => {
             <div>
               {searchQuery && (
                 <h2 className="text-lg mb-3">
-                  Search results for: <span className="text-traccent">{searchQuery}</span>
+                  Resultados de búsqueda para: <span className="text-traccent">{searchQuery}</span>
                 </h2>
               )}
               
               {selectedTechniqueId && (
                 <h2 className="text-lg mb-3">
-                  Technique: <span className="text-traccent">{getSelectedTechniqueName()}</span>
+                  Técnica: <span className="text-traccent">{getSelectedTechniqueName()}</span>
                 </h2>
               )}
               
@@ -99,21 +101,21 @@ const JiuJitsuPage = () => {
             </div>
           ) : searchQuery ? (
             <div className="text-center py-8">
-              <p className="text-trgray-light mb-2">No videos found for "{searchQuery}"</p>
-              <p className="text-sm">Try another search term or check the techniques roadmap</p>
+              <p className="text-trgray-light mb-2">No se encontraron videos para "{searchQuery}"</p>
+              <p className="text-sm">Intenta con otro término o consulta las técnicas</p>
             </div>
           ) : (
             <div className="text-center py-8">
-              <p className="text-trgray-light">Search for Gordon Ryan instructional videos</p>
-              <p className="text-sm mt-2">Try techniques like "armbar", "back control", or "triangle"</p>
+              <p className="text-trgray-light">Busca videos instructivos de Gordon Ryan</p>
+              <p className="text-sm mt-2">Prueba con técnicas como "armbar", "back control" o "triangle"</p>
             </div>
           )}
         </TabsContent>
         
         <TabsContent value="techniques" className="mt-0">
-          <h2 className="text-lg font-medium mb-3">Jiu-Jitsu Techniques</h2>
+          <h2 className="text-lg font-medium mb-3">Técnicas de Jiu-Jitsu</h2>
           <p className="text-trgray-light text-sm mb-4">
-            Explore techniques and find related instructional videos by Gordon Ryan
+            Explora técnicas y encuentra videos instructivos relacionados de Gordon Ryan
           </p>
           
           <TechniqueTree 
