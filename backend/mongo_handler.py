@@ -1,11 +1,11 @@
 from pymongo import MongoClient
 
 # MongoDB connection setup
-client = MongoClient("mongodb+srv://nirogo06:GztrMsrpzYJtvnja@cluster0.szcy1xz.mongodb.net/")
-db = client["roll_with_ryan"]
+client = MongoClient("mongodb+srv://nirogo06:heyho@cluster0.ythepr9.mongodb.net/")
+db = client["users"]
 
-# Ensure the 'users' collection exists
-users_collection = db["users"]
+# Ensure the 'usuariosliftandroll' collection exists
+users_collection = db["usuariosliftandroll"]
 
 def save_user(user_data):
     """Save a new user to the MongoDB 'users' collection."""

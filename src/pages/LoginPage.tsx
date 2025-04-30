@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useAuth } from '@/contexts/AuthContext';
@@ -120,7 +119,7 @@ const LoginPage = () => {
           
           <div className="mt-8 text-center">
             <p className="text-sm text-trgray-light">
-              ¿No tienes una cuenta? <a href="#" className="text-trwhite hover:underline">Regístrate</a>
+              ¿No tienes una cuenta? <Link to="/register" className="text-trwhite hover:underline">Regístrate</Link>
             </p>
           </div>
         </div>

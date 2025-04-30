@@ -1,7 +1,6 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { saveUser } from '../services/api';
+import * as api from '../services/api'; // Updated import to use the frontend API service
 
 interface User {
   id: string;
@@ -37,27 +36,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      // In a real app, this would validate with your backend
-      if (email.length > 0 && password.length > 0) {
-        const mockUser = {
-          id: '1',
-          username: email.split('@')[0],
-          email
-        };
-        
-        // Save user to MongoDB through our API service
-        await saveUser(mockUser);
+      // Call the actual login API endpoint
+      const loggedInUser = await api.loginUser({ email, password });
 
-        setUser(mockUser);
-        localStorage.setItem('user', JSON.stringify(mockUser));
+      if (loggedInUser) {
+        // Set user state and save to localStorage
+        setUser(loggedInUser);
+        localStorage.setItem('user', JSON.stringify(loggedInUser));
+        // Optionally navigate to dashboard or intended page upon successful login
+        // navigate('/dashboard'); // Consider moving navigation logic to the component calling login
         return true;
+      } else {
+        // Handle login failure (e.g., show toast message in the component)
+        console.error('Login failed: Invalid credentials or server error.');
+        return false;
       }
-      return false;
     } catch (error) {
+      // Handle unexpected errors during the login process
       console.error('Login error:', error);
+      // Optionally show a generic error toast message
       return false;
     } finally {
       setIsLoading(false);
@@ -70,9 +67,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       username: 'tester',
       email: 'test@example.com'
     };
-    
-    // We're not awaiting this in quickLogin since it's for testing only
-    saveUser(mockUser).catch(err => console.error('Error in quickLogin:', err));
     
     setUser(mockUser);
     localStorage.setItem('user', JSON.stringify(mockUser));
