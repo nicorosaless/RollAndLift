@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Calendar from '../components/gym/Calendar';
@@ -7,7 +6,7 @@ import ExerciseEntry from '../components/gym/ExerciseEntry';
 import { Workout, Exercise } from '../types';
 import { sampleWorkouts } from '../data/sampleData';
 import { useToast } from '@/hooks/use-toast';
-import { dumbbell } from 'lucide-react';
+import { Dumbbell } from 'lucide-react';
 
 const GymPage = () => {
   const [workouts, setWorkouts] = useState<Workout[]>(sampleWorkouts);
