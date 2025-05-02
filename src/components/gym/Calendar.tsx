@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Calendar as CalendarIcon } from 'lucide-react';
 
 interface CalendarProps {
   workoutDays: string[];
@@ -43,39 +44,58 @@ const Calendar: React.FC<CalendarProps> = ({ workoutDays, selectedDate, onSelect
     return day === today.getDate();
   };
 
+  // Get month name
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  
+  const monthName = monthNames[currentMonth];
+
   return (
-    <div className="mb-6 animate-fade-in">
-      <h2 className="text-lg font-semibold mb-2">Calendar</h2>
-      <div className="bg-secondary rounded-lg p-4">
-        <div className="grid grid-cols-7 gap-1 text-center mb-2">
-          {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day) => (
-            <div key={day} className="text-xs text-trgray-light">
-              {day}
-            </div>
-          ))}
-        </div>
-        <div className="grid grid-cols-7 gap-1 text-center">
-          {/* Empty cells for days before the 1st of the month */}
-          {Array.from({ length: firstDayOfMonth }).map((_, i) => (
-            <div key={`empty-${i}`} className="h-8 w-8"></div>
-          ))}
-          
-          {/* Calendar days */}
-          {days.map((day) => (
-            <button
-              key={day}
-              onClick={() => onSelectDate(formatDateString(day))}
-              className={`h-8 w-8 rounded-full flex items-center justify-center text-sm transition-all
-                ${hasWorkout(day) ? 'bg-traccent text-black font-medium' : ''}
-                ${isSelected(day) && !hasWorkout(day) ? 'border-2 border-traccent' : ''}
-                ${isToday(day) && !hasWorkout(day) && !isSelected(day) ? 'border border-trgray-light' : ''}
-                ${!hasWorkout(day) && !isSelected(day) && !isToday(day) ? 'hover:bg-trgray-mid' : ''}
-              `}
-            >
-              {day}
-            </button>
-          ))}
-        </div>
+    <div className="mb-8 animate-fade-in rounded-xl bg-gradient-to-br from-purple-900 to-blue-900 p-5 shadow-xl">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-bold text-white flex items-center">
+          <CalendarIcon className="mr-2" />
+          {monthName} {currentYear}
+        </h2>
+      </div>
+      <div className="grid grid-cols-7 gap-2 text-center mb-3">
+        {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day) => (
+          <div key={day} className="text-xs text-gray-300 font-medium">
+            {day}
+          </div>
+        ))}
+      </div>
+      <div className="grid grid-cols-7 gap-2 text-center">
+        {/* Empty cells for days before the 1st of the month */}
+        {Array.from({ length: firstDayOfMonth }).map((_, i) => (
+          <div key={`empty-${i}`} className="h-9 w-9"></div>
+        ))}
+        
+        {/* Calendar days */}
+        {days.map((day) => (
+          <button
+            key={day}
+            onClick={() => onSelectDate(formatDateString(day))}
+            className={`h-9 w-9 rounded-full flex items-center justify-center text-sm transition-all duration-300
+              ${hasWorkout(day) 
+                ? 'bg-gradient-to-br from-pink-500 to-orange-400 text-white font-bold shadow-lg transform hover:scale-110' 
+                : ''}
+              ${isSelected(day) && !hasWorkout(day) 
+                ? 'border-2 border-pink-400 text-white' 
+                : ''}
+              ${isToday(day) && !hasWorkout(day) && !isSelected(day) 
+                ? 'border border-gray-400 text-white' 
+                : ''}
+              ${!hasWorkout(day) && !isSelected(day) && !isToday(day) 
+                ? 'text-gray-300 hover:bg-purple-800 hover:text-white' 
+                : ''}
+            `}
+          >
+            {day}
+          </button>
+        ))}
       </div>
     </div>
   );

@@ -7,35 +7,35 @@
 
 @layer base {
   :root {
-    --background: 0 0% 12%;
+    --background: 260 15% 8%;
     --foreground: 0 0% 98%;
 
-    --card: 0 0% 15%;
+    --card: 260 15% 12%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 0 0% 15%;
+    --popover: 260 15% 12%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 0 0% 100%;
-    --primary-foreground: 0 0% 12%;
+    --primary: 330 90% 60%;
+    --primary-foreground: 0 0% 98%;
 
-    --secondary: 0 0% 20%;
+    --secondary: 260 15% 18%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 0 0% 20%;
-    --muted-foreground: 0 0% 60%;
+    --muted: 260 15% 18%;
+    --muted-foreground: 0 0% 70%;
 
-    --accent: 0 0% 100%;
-    --accent-foreground: 0 0% 12%;
+    --accent: 330 90% 60%;
+    --accent-foreground: 0 0% 98%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 25%;
-    --input: 0 0% 25%;
-    --ring: 0 0% 100%;
+    --border: 260 15% 25%;
+    --input: 260 15% 25%;
+    --ring: 330 90% 60%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
   }
 
   * {
@@ -43,33 +43,32 @@
   }
 
   body {
-    @apply bg-trblack text-trwhite font-inter;
+    @apply bg-[#151022] text-white font-inter;
   }
 }
 
 @layer components {
   .tab-active {
-    @apply text-trwhite border-b-2 border-trwhite;
+    @apply text-white border-b-2 border-pink-500;
   }
   
   .tab-inactive {
-    @apply text-trgray-light hover:text-trwhite transition-colors;
+    @apply text-gray-400 hover:text-white transition-colors;
   }
   
   .card-hover {
-    @apply hover:bg-secondary/50 transition-colors duration-200;
+    @apply hover:bg-gray-800/50 transition-colors duration-200;
   }
   
   .input-field {
-    @apply bg-secondary text-trwhite border-trgray-mid rounded-md px-3 py-2 focus:ring-1 focus:ring-trwhite focus:outline-none;
+    @apply bg-gray-800 text-white border-gray-700 rounded-md px-3 py-2 focus:ring-1 focus:ring-pink-500 focus:outline-none;
   }
   
   .button-primary {
-    @apply bg-trwhite text-black font-medium px-4 py-2 rounded-md hover:opacity-90 transition-opacity;
+    @apply bg-gradient-to-r from-pink-500 to-purple-600 text-white font-medium px-4 py-2 rounded-md hover:shadow-lg transition-all;
   }
   
   .button-secondary {
-    @apply bg-trgray-mid text-trwhite px-4 py-2 rounded-md hover:bg-trgray-light transition-colors;
+    @apply bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition-colors;
   }
 }
-
