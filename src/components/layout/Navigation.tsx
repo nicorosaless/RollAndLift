@@ -6,7 +6,7 @@ const Navigation = () => {
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-trgray-dark border-t border-trgray-mid h-16 flex items-center justify-around">
       <NavLink 
-        to="/gym" 
+        to="/" 
         className={({ isActive }) => 
           `flex flex-col items-center justify-center h-full w-1/2 ${isActive ? 'tab-active' : 'tab-inactive'}`
         }
