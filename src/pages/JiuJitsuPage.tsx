@@ -4,9 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import SearchBar from '../components/jiujitsu/SearchBar';
 import VideoCard from '../components/jiujitsu/VideoCard';
 import TechniqueTree from '../components/jiujitsu/TechniqueTree';
+import JiuJitsuHomePage from '../components/jiujitsu/JiuJitsuHomePage';
+import DanaherChatbot from '../components/jiujitsu/DanaherChatbot';
 import { Technique, Video } from '../types';
 import { sampleTechniques, sampleVideos } from '../data/sampleData';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Home, BookOpen, MessageSquare } from 'lucide-react';
 
 const JiuJitsuPage = () => {
   const [videos, setVideos] = useState<Video[]>([]);
@@ -64,64 +67,64 @@ const JiuJitsuPage = () => {
     <div>
       <h1 className="text-2xl font-bold mb-6">Lift & Roll - Jiu-Jitsu</h1>
       
-      <Tabs defaultValue="techniques" className="w-full mb-6">
-        <TabsList className="grid grid-cols-2 mb-4">
-          <TabsTrigger value="search">Buscar Videos</TabsTrigger>
-          <TabsTrigger value="techniques">Técnicas</TabsTrigger>
-        </TabsList>
+      <Tabs defaultValue="home" className="w-full mb-6">
+        <div className="flex justify-between items-center mb-4">
+          <div></div> {/* Empty div for spacing */}
+          <TabsList className="grid grid-cols-3">
+            <TabsTrigger value="home" className="flex flex-col items-center px-6">
+              <Home className="h-5 w-5 mb-1" />
+              <span className="text-xs">Home</span>
+            </TabsTrigger>
+            <TabsTrigger value="roadmap" className="flex flex-col items-center px-6">
+              <BookOpen className="h-5 w-5 mb-1" />
+              <span className="text-xs">Roadmap</span>
+            </TabsTrigger>
+            <TabsTrigger value="chatbot" className="flex flex-col items-center px-6">
+              <MessageSquare className="h-5 w-5 mb-1" />
+              <span className="text-xs">Danaher</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
         
-        <TabsContent value="search" className="mt-0">
-          <SearchBar onSearch={handleSearch} />
-          
-          {videos.length > 0 ? (
-            <div>
-              {searchQuery && (
-                <h2 className="text-lg mb-3">
-                  Resultados de búsqueda para: <span className="text-traccent">{searchQuery}</span>
-                </h2>
-              )}
-              
-              {selectedTechniqueId && (
-                <h2 className="text-lg mb-3">
-                  Técnica: <span className="text-traccent">{getSelectedTechniqueName()}</span>
-                </h2>
-              )}
-              
-              <div>
-                {videos.map(video => (
-                  <VideoCard
-                    key={video.id}
-                    title={video.title}
-                    thumbnail={video.thumbnail}
-                    videoId={video.videoId}
-                    instructor={video.instructor}
-                  />
-                ))}
-              </div>
-            </div>
-          ) : searchQuery ? (
-            <div className="text-center py-8">
-              <p className="text-trgray-light mb-2">No se encontraron videos para "{searchQuery}"</p>
-              <p className="text-sm">Intenta con otro término o consulta las técnicas</p>
-            </div>
-          ) : (
-            <div className="text-center py-8">
-              <p className="text-trgray-light">Busca videos instructivos de Gordon Ryan</p>
-              <p className="text-sm mt-2">Prueba con técnicas como "armbar", "back control" o "triangle"</p>
-            </div>
-          )}
+        <TabsContent value="home" className="mt-0">
+          <JiuJitsuHomePage />
         </TabsContent>
         
-        <TabsContent value="techniques" className="mt-0">
-          <h2 className="text-lg font-medium mb-3">Técnicas de Jiu-Jitsu</h2>
+        <TabsContent value="roadmap" className="mt-0">
+          <h2 className="text-lg font-medium mb-3">Roadmap de Jiu-Jitsu</h2>
           <p className="text-trgray-light text-sm mb-4">
             Explora técnicas y encuentra videos instructivos relacionados de Gordon Ryan
           </p>
           
-          <TechniqueTree 
-            techniques={techniques}
-            onSelectTechnique={handleSelectTechnique}
-          />
+          <div className="flex flex-col space-y-4">
+            {selectedTechniqueId && videos.length > 0 && (
+              <div>
+                <h2 className="text-lg mb-3">
+                  Técnica: <span className="text-traccent">{getSelectedTechniqueName()}</span>
+                </h2>
+                <div>
+                  {videos.map(video => (
+                    <VideoCard
+                      key={video.id}
+                      title={video.title}
+                      thumbnail={video.thumbnail}
+                      videoId={video.videoId}
+                      instructor={video.instructor}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            <TechniqueTree 
+              techniques={techniques}
+              onSelectTechnique={handleSelectTechnique}
+            />
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="chatbot" className="mt-0">
+          <DanaherChatbot />
         </TabsContent>
       </Tabs>
     </div>
