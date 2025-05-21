@@ -2,7 +2,6 @@
 import React from 'react';
 import { BookOpen, MessageSquare, Search, Video, Link, Award, Shield, GitMerge, Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { Tabs, TabsTrigger } from '@/components/ui/tabs';
 
 const JiuJitsuHomePage = () => {
   const navigate = useNavigate();
@@ -25,7 +24,7 @@ const JiuJitsuHomePage = () => {
   return (
     <div className="space-y-8 pb-10">
       {/* Hero Section */}
-      <div className="p-8 bg-gradient-to-r from-purple-900/80 to-pink-900/60 rounded-xl shadow-lg border border-pink-500/20 relative overflow-hidden">
+      <div className="p-8 bg-gradient-to-r from-purple-900/80 to-pink-900/60 rounded-xl shadow-lg border border-pink-500/20 relative overflow-hidden aspect-[4/3] md:aspect-square lg:aspect-[4/3] flex flex-col justify-center">
         {/* Decorative elements */}
         <div className="absolute -right-10 -top-10 w-40 h-40 bg-pink-500/10 rounded-full blur-3xl"></div>
         <div className="absolute -left-10 -bottom-10 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl"></div>
@@ -164,7 +163,7 @@ const FeatureCard = ({ icon: Icon, title, description, color = "from-purple-700/
 }) => {
   return (
     <div 
-      className={`p-6 bg-gradient-to-br ${color} rounded-xl border border-white/10 hover:border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer backdrop-blur-sm`}
+      className={`p-6 bg-gradient-to-br ${color} rounded-xl border border-white/10 hover:border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer backdrop-blur-sm aspect-square flex flex-col justify-center`}
       onClick={onClick}
     >
       <div className="flex items-start">
@@ -187,7 +186,7 @@ const CategoryCard = ({ icon: Icon, title, description, color = "from-purple-700
   color?: string
 }) => {
   return (
-    <div className={`p-5 bg-gradient-to-br ${color} rounded-lg border border-white/10 hover:border-white/20 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer shadow-md`}>
+    <div className={`p-5 bg-gradient-to-br ${color} rounded-lg border border-white/10 hover:border-white/20 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer shadow-md aspect-square flex flex-col justify-center`}>
       <div className="flex items-center mb-3">
         <div className="p-2 bg-white/10 rounded-lg mr-3 backdrop-blur-sm">
           <Icon className="w-5 h-5 text-white" />
@@ -205,7 +204,7 @@ const VideoHighlight = ({ title, description, url }: { title: string, descriptio
       href={url} 
       target="_blank" 
       rel="noopener noreferrer"
-      className="flex items-center p-4 bg-white/5 hover:bg-white/10 rounded-lg transition-colors border border-white/10 hover:border-white/20 group"
+      className="flex items-center p-4 bg-white/5 hover:bg-white/10 rounded-lg transition-colors border border-white/10 hover:border-white/20 group aspect-[3/1]"
     >
       <div className="mr-4 relative flex-shrink-0">
         <div className="w-16 h-16 flex items-center justify-center bg-gradient-to-br from-purple-600/80 to-pink-600/60 rounded-lg shadow-lg group-hover:from-pink-600/80 group-hover:to-purple-600/60 transition-colors">
@@ -229,4 +228,3 @@ const VideoHighlight = ({ title, description, url }: { title: string, descriptio
 };
 
 export default JiuJitsuHomePage;
-

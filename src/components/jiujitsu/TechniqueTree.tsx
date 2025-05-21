@@ -74,7 +74,7 @@ const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechn
           <div 
             key={technique.id}
             className={`
-              rounded-lg relative overflow-hidden group
+              rounded-lg relative overflow-hidden group aspect-square
               ${technique.videoIds?.length 
                 ? 'cursor-pointer transition-all duration-300 transform hover:scale-105' 
                 : ''
@@ -105,8 +105,8 @@ const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechn
             </div>
             
             {/* Content overlay */}
-            <div className="relative z-20 p-5">
-              <div className="flex justify-between items-center">
+            <div className="relative z-20 p-5 h-full flex flex-col justify-between">
+              <div className="flex justify-between items-start">
                 <div className="flex items-center">
                   <div className="mr-3 bg-gradient-to-br from-purple-800/90 to-pink-700/70 p-2 rounded-lg shadow-inner">
                     {technique.children?.length ? (
@@ -178,9 +178,9 @@ const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechn
               )}
               
               <div className="relative">
-                {/* Main category card with image background */}
+                {/* Main category card with image background - now more square */}
                 <div 
-                  className="flex items-center justify-between p-5 rounded-xl cursor-pointer border-l-4 border-pink-500 shadow-lg backdrop-blur-sm transition-colors overflow-hidden relative h-36"
+                  className="flex items-center justify-between p-5 rounded-xl cursor-pointer border-l-4 border-pink-500 shadow-lg backdrop-blur-sm overflow-hidden relative aspect-video md:aspect-[4/3]"
                   onClick={() => toggleExpand(technique.id)}
                 >
                   {/* Background image */}
@@ -194,7 +194,7 @@ const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechn
                   </div>
 
                   <div className="flex items-center relative z-20">
-                    <div className="mr-4 p-2 bg-gradient-to-br from-purple-700/90 to-pink-700/70 rounded-lg shadow-xl">
+                    <div className="mr-4 p-3 bg-gradient-to-br from-purple-700/90 to-pink-700/70 rounded-lg shadow-xl">
                       {getTechniqueIcon(technique.name, index)}
                     </div>
                     <div>
