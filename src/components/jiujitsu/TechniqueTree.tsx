@@ -45,6 +45,28 @@ const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechn
     return <Award size={20} className="text-fuchsia-400" />;
   };
 
+  // Get an image URL based on technique name
+  const getTechniqueImage = (name: string, index: number) => {
+    const imageMapping: {[key: string]: string} = {
+      'Back Attacks': 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=400&h=250&fit=crop',
+      'Guard Passing': 'https://images.unsplash.com/photo-1523712999610-f77fbcfc3843?w=400&h=250&fit=crop',
+      'Leg Locks': 'https://images.unsplash.com/photo-1500673922987-e212871fec22?w=400&h=250&fit=crop',
+      'Pin Escapes': 'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=400&h=250&fit=crop',
+      'Submission Holds': 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=400&h=250&fit=crop',
+    };
+
+    // Find partial matches in the technique name
+    for (const key in imageMapping) {
+      if (name.includes(key)) {
+        return imageMapping[key];
+      }
+    }
+
+    // Default image based on index
+    const defaultImages = Object.values(imageMapping);
+    return defaultImages[index % defaultImages.length];
+  };
+
   const renderChildTechniques = (techniques: Technique[], depth = 0) => {
     return (
       <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 ${depth > 0 ? 'ml-6' : ''}`}>
@@ -52,13 +74,13 @@ const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechn
           <div 
             key={technique.id}
             className={`
-              p-4 rounded-lg relative overflow-hidden group
+              rounded-lg relative overflow-hidden group
               ${technique.videoIds?.length 
-                ? 'bg-gradient-to-br from-purple-700/60 to-pink-700/40 hover:from-pink-600/60 hover:to-purple-600/50 cursor-pointer transition-colors duration-300 transform hover:scale-105' 
-                : 'bg-gradient-to-br from-purple-800/30 to-indigo-700/20'
+                ? 'cursor-pointer transition-all duration-300 transform hover:scale-105' 
+                : ''
               }
               ${depth === 0 ? 'border border-pink-500/20' : ''}
-              shadow-lg backdrop-blur-sm
+              shadow-lg backdrop-blur-sm h-full
             `}
             onClick={() => {
               if (technique.videoIds?.length) {
@@ -72,63 +94,67 @@ const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechn
               transform: technique.videoIds?.length ? 'translateZ(0)' : 'none'
             }}
           >
-            {/* Creative background elements */}
-            <div className="absolute -right-8 -bottom-8 w-24 h-24 rounded-full bg-gradient-to-br from-purple-500/10 to-pink-500/5 blur-xl"></div>
-            <div className="absolute -left-4 -top-4 w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500/10 to-purple-500/5 blur-lg"></div>
+            {/* Image background */}
+            <div className="absolute inset-0 w-full h-full">
+              <div className="absolute inset-0 bg-gradient-to-t from-purple-900/90 to-purple-800/40 z-10"></div>
+              <img 
+                src={getTechniqueImage(technique.name, idx)} 
+                alt={technique.name}
+                className="w-full h-full object-cover object-center" 
+              />
+            </div>
             
-            {/* Connecting lines */}
-            {depth > 0 && (
-              <div className="absolute -left-6 top-1/2 w-6 border-t border-pink-500/40"></div>
-            )}
-            
-            <div className="flex justify-between items-center relative z-10">
-              <div className="flex items-center">
-                <div className="mr-3 bg-gradient-to-br from-purple-800/90 to-pink-700/70 p-2 rounded-lg shadow-inner">
-                  {technique.children?.length ? (
-                    getTechniqueIcon(technique.name, idx)
-                  ) : technique.videoIds?.length ? (
-                    <Video size={18} className="text-pink-300" />
-                  ) : null}
+            {/* Content overlay */}
+            <div className="relative z-20 p-5">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center">
+                  <div className="mr-3 bg-gradient-to-br from-purple-800/90 to-pink-700/70 p-2 rounded-lg shadow-inner">
+                    {technique.children?.length ? (
+                      getTechniqueIcon(technique.name, idx)
+                    ) : technique.videoIds?.length ? (
+                      <Video size={18} className="text-pink-300" />
+                    ) : null}
+                  </div>
+                  <h3 className={`text-sm font-medium ${technique.videoIds?.length ? 'text-pink-300' : 'text-white'}`}>
+                    {technique.name}
+                  </h3>
                 </div>
-                <h3 className={`text-sm font-medium ${technique.videoIds?.length ? 'text-pink-300' : 'text-white'}`}>
-                  {technique.name}
-                </h3>
+
+                {technique.children?.length > 0 && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleExpand(technique.id);
+                    }}
+                    className="text-purple-300 hover:text-white focus:outline-none transform transition-transform duration-300"
+                  >
+                    <ChevronRight
+                      size={16}
+                      className={`transform transition-transform duration-300 ${expandedItems.includes(technique.id) ? 'rotate-90' : ''}`}
+                    />
+                  </button>
+                )}
               </div>
 
-              {technique.children?.length > 0 && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleExpand(technique.id);
-                  }}
-                  className="text-purple-300 hover:text-white focus:outline-none transform transition-transform duration-300"
-                >
-                  <ChevronRight
-                    size={16}
-                    className={`transform transition-transform duration-300 ${expandedItems.includes(technique.id) ? 'rotate-90' : ''}`}
-                  />
-                </button>
+              {technique.videoIds?.length > 0 && (
+                <div className="mt-3 flex justify-end">
+                  <span className="bg-gradient-to-r from-pink-600 to-purple-600 text-white text-xs px-2.5 py-1 rounded-full shadow-lg">
+                    {technique.videoIds.length} videos
+                  </span>
+                </div>
+              )}
+
+              {technique.children?.length > 0 && expandedItems.includes(technique.id) && (
+                <div className="mt-4 animate-fade-in">
+                  {renderChildTechniques(technique.children, depth + 1)}
+                </div>
+              )}
+              
+              {/* Decorative elements */}
+              {technique.videoIds?.length > 0 && (
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500/70 via-purple-500/70 to-indigo-500/70 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
               )}
             </div>
-
-            {technique.videoIds?.length > 0 && (
-              <div className="mt-3 flex justify-end">
-                <span className="bg-gradient-to-r from-pink-600 to-purple-600 text-white text-xs px-2.5 py-1 rounded-full shadow-lg">
-                  {technique.videoIds.length} videos
-                </span>
-              </div>
-            )}
-
-            {technique.children?.length > 0 && expandedItems.includes(technique.id) && (
-              <div className="mt-4 animate-fade-in">
-                {renderChildTechniques(technique.children, depth + 1)}
-              </div>
-            )}
-            
-            {/* Decorative elements */}
-            {technique.videoIds?.length > 0 && (
-              <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500/70 via-purple-500/70 to-indigo-500/70 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
-            )}
           </div>
         ))}
       </div>
@@ -151,30 +177,43 @@ const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechn
                 <div className="absolute -top-8 left-1/2 h-8 border-l-2 border-pink-500/40"></div>
               )}
               
-              <div 
-                className="flex items-center justify-between bg-gradient-to-r from-purple-900/70 to-pink-900/50 p-5 rounded-xl cursor-pointer border-l-4 border-pink-500 shadow-lg backdrop-blur-sm hover:from-purple-800/80 hover:to-pink-800/60 transition-colors"
-                onClick={() => toggleExpand(technique.id)}
-              >
-                <div className="flex items-center">
-                  <div className="mr-4 p-2 bg-gradient-to-br from-purple-700/90 to-pink-700/70 rounded-lg shadow-xl">
-                    {getTechniqueIcon(technique.name, index)}
+              <div className="relative">
+                {/* Main category card with image background */}
+                <div 
+                  className="flex items-center justify-between p-5 rounded-xl cursor-pointer border-l-4 border-pink-500 shadow-lg backdrop-blur-sm transition-colors overflow-hidden relative h-36"
+                  onClick={() => toggleExpand(technique.id)}
+                >
+                  {/* Background image */}
+                  <div className="absolute inset-0 z-0">
+                    <div className="absolute inset-0 bg-gradient-to-r from-purple-900/90 to-pink-900/70 z-10"></div>
+                    <img 
+                      src={getTechniqueImage(technique.name, index)} 
+                      alt={technique.name}
+                      className="w-full h-full object-cover object-center" 
+                    />
                   </div>
-                  <div>
-                    <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-purple-100">
-                      {technique.name}
-                    </h2>
-                    <p className="text-sm text-purple-200/80">
-                      {technique.children?.length || 0} técnicas • {
-                        technique.children?.reduce((count, child) => 
-                          count + (child.videoIds?.length || 0), 0)
-                      } videos
-                    </p>
+
+                  <div className="flex items-center relative z-20">
+                    <div className="mr-4 p-2 bg-gradient-to-br from-purple-700/90 to-pink-700/70 rounded-lg shadow-xl">
+                      {getTechniqueIcon(technique.name, index)}
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold text-white">
+                        {technique.name}
+                      </h2>
+                      <p className="text-sm text-purple-200/80">
+                        {technique.children?.length || 0} técnicas • {
+                          technique.children?.reduce((count, child) => 
+                            count + (child.videoIds?.length || 0), 0)
+                        } videos
+                      </p>
+                    </div>
                   </div>
+                  <ChevronRight 
+                    size={20}
+                    className={`transform transition-transform duration-300 text-pink-400 relative z-20 ${expandedItems.includes(technique.id) ? 'rotate-90' : ''}`}
+                  />
                 </div>
-                <ChevronRight 
-                  size={20}
-                  className={`transform transition-transform duration-300 text-pink-400 ${expandedItems.includes(technique.id) ? 'rotate-90' : ''}`}
-                />
               </div>
               
               {expandedItems.includes(technique.id) && technique.children && (
@@ -211,4 +250,3 @@ const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechn
 };
 
 export default TechniqueTree;
-

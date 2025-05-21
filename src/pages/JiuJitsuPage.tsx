@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import SearchBar from '../components/jiujitsu/SearchBar';
 import VideoCard from '../components/jiujitsu/VideoCard';
 import TechniqueTree from '../components/jiujitsu/TechniqueTree';
 import JiuJitsuHomePage from '../components/jiujitsu/JiuJitsuHomePage';
@@ -13,22 +12,9 @@ import { Home, BookOpen, MessageSquare } from 'lucide-react';
 
 const JiuJitsuPage = () => {
   const [videos, setVideos] = useState<Video[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedTechniqueId, setSelectedTechniqueId] = useState<string | null>(null);
   const [techniques] = useState<Technique[]>(sampleTechniques);
   const navigate = useNavigate();
-
-  // Handle search functionality
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    // In a real app, this would call an API to search videos
-    // For now, we'll just filter our sample videos that include the query in the title
-    const filteredVideos = sampleVideos.filter(
-      video => video.title.toLowerCase().includes(query.toLowerCase())
-    );
-    setVideos(filteredVideos);
-    setSelectedTechniqueId(null);
-  };
 
   // Handle technique selection
   const handleSelectTechnique = (techniqueId: string) => {
@@ -40,7 +26,6 @@ const JiuJitsuPage = () => {
     );
     
     setVideos(relatedVideos);
-    setSearchQuery("");
   };
 
   // Find the selected technique name if any
@@ -132,4 +117,3 @@ const JiuJitsuPage = () => {
 };
 
 export default JiuJitsuPage;
-
