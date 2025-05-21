@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight, FolderOpen, Folder } from 'lucide-react';
+import { ChevronRight, FolderOpen, Folder, Video } from 'lucide-react';
 
 interface Technique {
   id: string;
@@ -37,17 +37,18 @@ const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechn
 
   const renderChildTechniques = (techniques: Technique[], depth = 0) => {
     return (
-      <div className={`grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2 ${depth > 0 ? 'ml-4' : ''}`}>
+      <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-3 ${depth > 0 ? 'ml-4' : ''}`}>
         {techniques.map(technique => (
           <div 
             key={technique.id}
             className={`
-              p-3 rounded-lg transition-all duration-200
+              p-3 rounded-lg transition-all duration-200 relative
               ${technique.videoIds?.length 
-                ? 'bg-gradient-to-br from-secondary/80 to-secondary cursor-pointer hover:from-traccent/30 hover:to-secondary animate-fade-in' 
-                : 'bg-secondary/60'
+                ? 'bg-gradient-to-br from-purple-600/80 to-pink-500/60 cursor-pointer hover:from-pink-500/80 hover:to-purple-600/80 animate-fade-in' 
+                : 'bg-purple-900/50'
               }
               flex flex-col
+              ${depth === 0 ? 'border-2 border-pink-500/30' : ''}
             `}
             onClick={() => {
               if (technique.videoIds?.length) {
@@ -59,16 +60,18 @@ const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechn
           >
             <div className="flex justify-between items-center">
               <div className="flex items-center">
-                <div className="mr-2 text-trwhite">
+                <div className="mr-2 text-white">
                   {technique.children?.length ? (
                     expandedItems.includes(technique.id) ? (
-                      <FolderOpen size={18} className="text-traccent" />
+                      <FolderOpen size={18} className="text-pink-400" />
                     ) : (
-                      <Folder size={18} />
+                      <Folder size={18} className="text-purple-300" />
                     )
+                  ) : technique.videoIds?.length ? (
+                    <Video size={18} className="text-pink-400" />
                   ) : null}
                 </div>
-                <h3 className={`text-sm font-medium ${technique.videoIds?.length ? 'text-traccent' : 'text-trwhite'}`}>
+                <h3 className={`text-sm font-medium ${technique.videoIds?.length ? 'text-pink-300' : 'text-white'}`}>
                   {technique.name}
                 </h3>
               </div>
@@ -79,7 +82,7 @@ const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechn
                     e.stopPropagation();
                     toggleExpand(technique.id);
                   }}
-                  className="text-trgray-light hover:text-trwhite focus:outline-none"
+                  className="text-purple-300 hover:text-white focus:outline-none"
                 >
                   <ChevronRight
                     size={16}
@@ -91,7 +94,7 @@ const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechn
 
             {technique.videoIds?.length > 0 && (
               <div className="mt-1.5 flex justify-end">
-                <span className="bg-traccent text-black text-xs px-2 py-0.5 rounded-full">
+                <span className="bg-pink-500 text-white text-xs px-2 py-0.5 rounded-full">
                   {technique.videoIds.length}
                 </span>
               </div>
@@ -102,6 +105,11 @@ const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechn
                 {renderChildTechniques(technique.children, depth + 1)}
               </div>
             )}
+            
+            {/* Add connecting lines for graph-like appearance */}
+            {depth > 0 && (
+              <div className="absolute -left-4 top-1/2 w-4 border-t border-pink-500/50"></div>
+            )}
           </div>
         ))}
       </div>
@@ -111,30 +119,35 @@ const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechn
   const renderMainCategories = () => {
     return (
       <div className="space-y-6">
-        {techniques.map(technique => (
-          <div key={technique.id} className="mb-6">
+        {techniques.map((technique, index) => (
+          <div key={technique.id} className="mb-8 relative">
+            {index > 0 && (
+              <div className="absolute -top-4 left-1/2 h-4 border-l border-pink-500/50"></div>
+            )}
+            
             <div 
-              className="flex items-center justify-between bg-secondary/80 p-4 rounded-lg cursor-pointer"
+              className="flex items-center justify-between bg-gradient-to-r from-purple-900/90 to-purple-700/80 p-4 rounded-lg cursor-pointer border-l-4 border-pink-500"
               onClick={() => toggleExpand(technique.id)}
             >
               <div className="flex items-center">
-                <div className="mr-3 text-trwhite">
+                <div className="mr-3 text-white">
                   {expandedItems.includes(technique.id) ? (
-                    <FolderOpen size={20} className="text-trwhite" />
+                    <FolderOpen size={20} className="text-pink-400" />
                   ) : (
-                    <Folder size={20} />
+                    <Folder size={20} className="text-purple-300" />
                   )}
                 </div>
-                <h2 className="text-lg font-bold text-trwhite">{technique.name}</h2>
+                <h2 className="text-lg font-bold text-white">{technique.name}</h2>
               </div>
               <ChevronRight 
                 size={18}
-                className={`transform transition-transform text-traccent ${expandedItems.includes(technique.id) ? 'rotate-90' : ''}`}
+                className={`transform transition-transform text-pink-400 ${expandedItems.includes(technique.id) ? 'rotate-90' : ''}`}
               />
             </div>
             
             {expandedItems.includes(technique.id) && technique.children && (
-              <div className="mt-3 animate-fade-in">
+              <div className="mt-4 animate-fade-in relative">
+                <div className="absolute -top-px left-6 h-4 border-l border-pink-500/50"></div>
                 {renderChildTechniques(technique.children)}
               </div>
             )}
@@ -145,7 +158,10 @@ const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechn
   };
 
   return (
-    <div className="bg-secondary/30 rounded-lg p-4">
+    <div className="bg-purple-900/30 rounded-lg p-6 shadow-lg border border-pink-500/20">
+      <h2 className="text-xl font-bold text-center mb-6 text-white">
+        Sistema de Técnicas de <span className="text-pink-400">Jiu-Jitsu</span>
+      </h2>
       {renderMainCategories()}
     </div>
   );
