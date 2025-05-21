@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight, FolderOpen, Folder, Video } from 'lucide-react';
+import { ChevronRight, BookOpen, Video, Users, Shield, GitMerge, GitPullRequest, Zap, Star, Award } from 'lucide-react';
 
 interface Technique {
   id: string;
@@ -30,25 +30,35 @@ const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechn
   const handleTechniqueClick = (technique: Technique) => {
     if (technique.videoIds?.length) {
       onSelectTechnique(technique.id);
-      // Navigate to the technique detail page
       navigate(`/jiujitsu/technique/${technique.id}`);
     }
   };
 
+  // Get appropriate icon for technique category
+  const getTechniqueIcon = (name: string, index: number) => {
+    if (name.includes('Back') || name.includes('Espalda')) return <GitPullRequest size={20} className="text-pink-400" />;
+    if (name.includes('Guard') || name.includes('Guardia')) return <Shield size={20} className="text-purple-400" />;
+    if (name.includes('Lock') || name.includes('Hook')) return <GitMerge size={20} className="text-blue-400" />;
+    if (name.includes('Mount') || name.includes('Control')) return <Users size={20} className="text-green-400" />;
+    if (name.includes('Half')) return <Star size={20} className="text-yellow-400" />;
+    if (name.includes('Side') || name.includes('Escape')) return <Zap size={20} className="text-orange-400" />;
+    return <Award size={20} className="text-fuchsia-400" />;
+  };
+
   const renderChildTechniques = (techniques: Technique[], depth = 0) => {
     return (
-      <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-3 ${depth > 0 ? 'ml-4' : ''}`}>
-        {techniques.map(technique => (
+      <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 ${depth > 0 ? 'ml-6' : ''}`}>
+        {techniques.map((technique, idx) => (
           <div 
             key={technique.id}
             className={`
-              p-3 rounded-lg transition-all duration-200 relative
+              p-4 rounded-lg relative overflow-hidden group
               ${technique.videoIds?.length 
-                ? 'bg-gradient-to-br from-purple-600/80 to-pink-500/60 cursor-pointer hover:from-pink-500/80 hover:to-purple-600/80 animate-fade-in' 
-                : 'bg-purple-900/50'
+                ? 'bg-gradient-to-br from-purple-700/60 to-pink-700/40 hover:from-pink-600/60 hover:to-purple-600/50 cursor-pointer transition-colors duration-300 transform hover:scale-105' 
+                : 'bg-gradient-to-br from-purple-800/30 to-indigo-700/20'
               }
-              flex flex-col
-              ${depth === 0 ? 'border-2 border-pink-500/30' : ''}
+              ${depth === 0 ? 'border border-pink-500/20' : ''}
+              shadow-lg backdrop-blur-sm
             `}
             onClick={() => {
               if (technique.videoIds?.length) {
@@ -57,18 +67,27 @@ const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechn
                 toggleExpand(technique.id);
               }
             }}
+            style={{
+              perspective: '1000px',
+              transform: technique.videoIds?.length ? 'translateZ(0)' : 'none'
+            }}
           >
-            <div className="flex justify-between items-center">
+            {/* Creative background elements */}
+            <div className="absolute -right-8 -bottom-8 w-24 h-24 rounded-full bg-gradient-to-br from-purple-500/10 to-pink-500/5 blur-xl"></div>
+            <div className="absolute -left-4 -top-4 w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500/10 to-purple-500/5 blur-lg"></div>
+            
+            {/* Connecting lines */}
+            {depth > 0 && (
+              <div className="absolute -left-6 top-1/2 w-6 border-t border-pink-500/40"></div>
+            )}
+            
+            <div className="flex justify-between items-center relative z-10">
               <div className="flex items-center">
-                <div className="mr-2 text-white">
+                <div className="mr-3 bg-gradient-to-br from-purple-800/90 to-pink-700/70 p-2 rounded-lg shadow-inner">
                   {technique.children?.length ? (
-                    expandedItems.includes(technique.id) ? (
-                      <FolderOpen size={18} className="text-pink-400" />
-                    ) : (
-                      <Folder size={18} className="text-purple-300" />
-                    )
+                    getTechniqueIcon(technique.name, idx)
                   ) : technique.videoIds?.length ? (
-                    <Video size={18} className="text-pink-400" />
+                    <Video size={18} className="text-pink-300" />
                   ) : null}
                 </div>
                 <h3 className={`text-sm font-medium ${technique.videoIds?.length ? 'text-pink-300' : 'text-white'}`}>
@@ -82,33 +101,33 @@ const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechn
                     e.stopPropagation();
                     toggleExpand(technique.id);
                   }}
-                  className="text-purple-300 hover:text-white focus:outline-none"
+                  className="text-purple-300 hover:text-white focus:outline-none transform transition-transform duration-300"
                 >
                   <ChevronRight
                     size={16}
-                    className={`transform transition-transform ${expandedItems.includes(technique.id) ? 'rotate-90' : ''}`}
+                    className={`transform transition-transform duration-300 ${expandedItems.includes(technique.id) ? 'rotate-90' : ''}`}
                   />
                 </button>
               )}
             </div>
 
             {technique.videoIds?.length > 0 && (
-              <div className="mt-1.5 flex justify-end">
-                <span className="bg-pink-500 text-white text-xs px-2 py-0.5 rounded-full">
-                  {technique.videoIds.length}
+              <div className="mt-3 flex justify-end">
+                <span className="bg-gradient-to-r from-pink-600 to-purple-600 text-white text-xs px-2.5 py-1 rounded-full shadow-lg">
+                  {technique.videoIds.length} videos
                 </span>
               </div>
             )}
 
             {technique.children?.length > 0 && expandedItems.includes(technique.id) && (
-              <div className="mt-3 animate-fade-in">
+              <div className="mt-4 animate-fade-in">
                 {renderChildTechniques(technique.children, depth + 1)}
               </div>
             )}
             
-            {/* Add connecting lines for graph-like appearance */}
-            {depth > 0 && (
-              <div className="absolute -left-4 top-1/2 w-4 border-t border-pink-500/50"></div>
+            {/* Decorative elements */}
+            {technique.videoIds?.length > 0 && (
+              <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500/70 via-purple-500/70 to-indigo-500/70 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
             )}
           </div>
         ))}
@@ -118,53 +137,78 @@ const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechn
 
   const renderMainCategories = () => {
     return (
-      <div className="space-y-6">
-        {techniques.map((technique, index) => (
-          <div key={technique.id} className="mb-8 relative">
-            {index > 0 && (
-              <div className="absolute -top-4 left-1/2 h-4 border-l border-pink-500/50"></div>
-            )}
-            
-            <div 
-              className="flex items-center justify-between bg-gradient-to-r from-purple-900/90 to-purple-700/80 p-4 rounded-lg cursor-pointer border-l-4 border-pink-500"
-              onClick={() => toggleExpand(technique.id)}
-            >
-              <div className="flex items-center">
-                <div className="mr-3 text-white">
-                  {expandedItems.includes(technique.id) ? (
-                    <FolderOpen size={20} className="text-pink-400" />
-                  ) : (
-                    <Folder size={20} className="text-purple-300" />
-                  )}
+      <div className="relative">
+        {/* Decorative background elements */}
+        <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-purple-600/20 to-pink-600/10 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-gradient-to-br from-indigo-600/20 to-purple-600/10 rounded-full blur-3xl"></div>
+        
+        {/* Main content */}
+        <div className="relative z-10 space-y-8">
+          {techniques.map((technique, index) => (
+            <div key={technique.id} className="mb-10 relative">
+              {/* Connecting vertical line */}
+              {index > 0 && (
+                <div className="absolute -top-8 left-1/2 h-8 border-l-2 border-pink-500/40"></div>
+              )}
+              
+              <div 
+                className="flex items-center justify-between bg-gradient-to-r from-purple-900/70 to-pink-900/50 p-5 rounded-xl cursor-pointer border-l-4 border-pink-500 shadow-lg backdrop-blur-sm hover:from-purple-800/80 hover:to-pink-800/60 transition-colors"
+                onClick={() => toggleExpand(technique.id)}
+              >
+                <div className="flex items-center">
+                  <div className="mr-4 p-2 bg-gradient-to-br from-purple-700/90 to-pink-700/70 rounded-lg shadow-xl">
+                    {getTechniqueIcon(technique.name, index)}
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-purple-100">
+                      {technique.name}
+                    </h2>
+                    <p className="text-sm text-purple-200/80">
+                      {technique.children?.length || 0} técnicas • {
+                        technique.children?.reduce((count, child) => 
+                          count + (child.videoIds?.length || 0), 0)
+                      } videos
+                    </p>
+                  </div>
                 </div>
-                <h2 className="text-lg font-bold text-white">{technique.name}</h2>
+                <ChevronRight 
+                  size={20}
+                  className={`transform transition-transform duration-300 text-pink-400 ${expandedItems.includes(technique.id) ? 'rotate-90' : ''}`}
+                />
               </div>
-              <ChevronRight 
-                size={18}
-                className={`transform transition-transform text-pink-400 ${expandedItems.includes(technique.id) ? 'rotate-90' : ''}`}
-              />
+              
+              {expandedItems.includes(technique.id) && technique.children && (
+                <div className="mt-6 animate-fade-in relative">
+                  <div className="absolute -top-2 left-10 h-6 border-l-2 border-pink-500/40"></div>
+                  <div className="absolute top-4 left-10 w-6 border-t-2 border-pink-500/40"></div>
+                  {renderChildTechniques(technique.children)}
+                </div>
+              )}
             </div>
-            
-            {expandedItems.includes(technique.id) && technique.children && (
-              <div className="mt-4 animate-fade-in relative">
-                <div className="absolute -top-px left-6 h-4 border-l border-pink-500/50"></div>
-                {renderChildTechniques(technique.children)}
-              </div>
-            )}
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     );
   };
 
   return (
-    <div className="bg-purple-900/30 rounded-lg p-6 shadow-lg border border-pink-500/20">
-      <h2 className="text-xl font-bold text-center mb-6 text-white">
-        Sistema de Técnicas de <span className="text-pink-400">Jiu-Jitsu</span>
+    <div className="relative overflow-hidden bg-gradient-to-br from-purple-900/30 to-indigo-900/20 rounded-xl p-8 shadow-xl border border-pink-500/20">
+      {/* Decorative elements */}
+      <div className="absolute top-0 right-0 h-40 w-40 bg-pink-500/5 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 left-0 h-40 w-40 bg-purple-500/5 rounded-full blur-3xl"></div>
+      <div className="absolute top-1/2 left-1/3 h-20 w-20 bg-indigo-500/5 rounded-full blur-2xl"></div>
+      
+      <h2 className="text-2xl font-bold text-center mb-8">
+        <span className="inline-block bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400">
+          Sistema de Jiujitsu
+        </span>
+        <div className="w-32 h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 mx-auto mt-2 rounded-full"></div>
       </h2>
+      
       {renderMainCategories()}
     </div>
   );
 };
 
 export default TechniqueTree;
+
