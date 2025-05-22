@@ -48,7 +48,7 @@ const JiuJitsuPage = () => {
       <h1 className="text-2xl font-bold mb-6">Lift & Roll - Jiu-Jitsu</h1>
       
       {/* Minimalist tab navigation based on the reference image */}
-      <div className="flex justify-center mb-6">
+      <div className="flex justify-center mb-6 tabs-container">
         <div className="w-full max-w-lg bg-gradient-to-r from-purple-800 to-pink-700 rounded-xl overflow-hidden">
           <div className="flex justify-between">
             <button 
