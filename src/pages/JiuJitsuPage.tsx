@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import VideoCard from '../components/jiujitsu/VideoCard';
@@ -9,7 +8,6 @@ import { Technique, Video } from '../types';
 import { sampleTechniques, sampleVideos } from '../data/sampleData';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Home, BookOpen, MessageSquare } from 'lucide-react';
-
 const JiuJitsuPage = () => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [selectedTechniqueId, setSelectedTechniqueId] = useState<string | null>(null);
@@ -19,19 +17,15 @@ const JiuJitsuPage = () => {
   // Handle technique selection
   const handleSelectTechnique = (techniqueId: string) => {
     setSelectedTechniqueId(techniqueId);
-    
+
     // Find videos associated with this technique
-    const relatedVideos = sampleVideos.filter(
-      video => video.techniqueIds.includes(techniqueId)
-    );
-    
+    const relatedVideos = sampleVideos.filter(video => video.techniqueIds.includes(techniqueId));
     setVideos(relatedVideos);
   };
 
   // Find the selected technique name if any
   const getSelectedTechniqueName = () => {
     if (!selectedTechniqueId) return "";
-    
     const findTechnique = (techniques: Technique[]): string => {
       for (const tech of techniques) {
         if (tech.id === selectedTechniqueId) {
@@ -44,18 +38,15 @@ const JiuJitsuPage = () => {
       }
       return "";
     };
-    
     return findTechnique(techniques);
   };
-
-  return (
-    <div className="pb-24">
+  return <div className="pb-24">
       <h1 className="text-2xl font-bold mb-6">Lift & Roll - Jiu-Jitsu</h1>
       
       <Tabs defaultValue="home" className="w-full mb-6">
         <div className="flex justify-between items-center mb-4">
           <div></div> {/* Empty div for spacing */}
-          <TabsList className="grid grid-cols-3 bg-gradient-to-r from-purple-900/90 to-pink-700/70 shadow-lg w-full max-w-md">
+          <TabsList className="grid grid-cols-3 bg-gradient-to-r from-purple-900/90 to-pink-700/70 shadow-lg w-full max-w-md rounded-sm">
             <TabsTrigger value="home" className="flex flex-col items-center py-3 px-6 data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-500/70 data-[state=active]:to-pink-500/60">
               <Home className="h-5 w-5 mb-1" />
               <span className="text-xs">Home</span>
@@ -82,30 +73,17 @@ const JiuJitsuPage = () => {
           </p>
           
           <div className="flex flex-col space-y-4 pb-6">
-            {selectedTechniqueId && videos.length > 0 && (
-              <div>
+            {selectedTechniqueId && videos.length > 0 && <div>
                 <h2 className="text-lg mb-3">
                   Técnica: <span className="text-traccent">{getSelectedTechniqueName()}</span>
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {videos.map(video => (
-                    <VideoCard
-                      key={video.id}
-                      title={video.title}
-                      thumbnail={video.thumbnail}
-                      videoId={video.videoId}
-                      instructor={video.instructor}
-                    />
-                  ))}
+                  {videos.map(video => <VideoCard key={video.id} title={video.title} thumbnail={video.thumbnail} videoId={video.videoId} instructor={video.instructor} />)}
                 </div>
-              </div>
-            )}
+              </div>}
             
             <div className="pb-8">
-              <TechniqueTree 
-                techniques={techniques}
-                onSelectTechnique={handleSelectTechnique}
-              />
+              <TechniqueTree techniques={techniques} onSelectTechnique={handleSelectTechnique} />
             </div>
           </div>
         </TabsContent>
@@ -114,8 +92,6 @@ const JiuJitsuPage = () => {
           <DanaherChatbot />
         </TabsContent>
       </Tabs>
-    </div>
-  );
+    </div>;
 };
-
 export default JiuJitsuPage;
