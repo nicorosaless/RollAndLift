@@ -49,24 +49,24 @@ const JiuJitsuPage = () => {
   };
 
   return (
-    <div className="pb-20">
+    <div className="pb-24">
       <h1 className="text-2xl font-bold mb-6">Lift & Roll - Jiu-Jitsu</h1>
       
       <Tabs defaultValue="home" className="w-full mb-6">
         <div className="flex justify-between items-center mb-4">
           <div></div> {/* Empty div for spacing */}
-          <TabsList className="grid grid-cols-3 bg-gradient-to-r from-purple-900/90 to-pink-700/70 shadow-lg">
-            <TabsTrigger value="home" className="flex flex-col items-center py-2 px-4 data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-500/70 data-[state=active]:to-pink-500/60">
-              <Home className="h-4 w-4 mb-1" />
-              <span className="text-[10px]">Home</span>
+          <TabsList className="grid grid-cols-3 bg-gradient-to-r from-purple-900/90 to-pink-700/70 shadow-lg w-full max-w-md">
+            <TabsTrigger value="home" className="flex flex-col items-center py-3 px-6 data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-500/70 data-[state=active]:to-pink-500/60">
+              <Home className="h-5 w-5 mb-1" />
+              <span className="text-xs">Home</span>
             </TabsTrigger>
-            <TabsTrigger value="roadmap" className="flex flex-col items-center py-2 px-4 data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-500/70 data-[state=active]:to-pink-500/60">
-              <BookOpen className="h-4 w-4 mb-1" />
-              <span className="text-[10px]">Roadmap</span>
+            <TabsTrigger value="roadmap" className="flex flex-col items-center py-3 px-6 data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-500/70 data-[state=active]:to-pink-500/60">
+              <BookOpen className="h-5 w-5 mb-1" />
+              <span className="text-xs">Roadmap</span>
             </TabsTrigger>
-            <TabsTrigger value="chatbot" className="flex flex-col items-center py-2 px-4 data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-500/70 data-[state=active]:to-pink-500/60">
-              <MessageSquare className="h-4 w-4 mb-1" />
-              <span className="text-[10px]">Danaher</span>
+            <TabsTrigger value="chatbot" className="flex flex-col items-center py-3 px-6 data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-500/70 data-[state=active]:to-pink-500/60">
+              <MessageSquare className="h-5 w-5 mb-1" />
+              <span className="text-xs">Danaher</span>
             </TabsTrigger>
           </TabsList>
         </div>
@@ -75,13 +75,13 @@ const JiuJitsuPage = () => {
           <JiuJitsuHomePage />
         </TabsContent>
         
-        <TabsContent value="roadmap" className="mt-0 mb-16">
+        <TabsContent value="roadmap" className="mt-0 mb-20">
           <h2 className="text-lg font-medium mb-3">Roadmap de Jiu-Jitsu</h2>
           <p className="text-trgray-light text-sm mb-4">
             Explora técnicas y encuentra videos instructivos relacionados de Gordon Ryan
           </p>
           
-          <div className="flex flex-col space-y-4">
+          <div className="flex flex-col space-y-4 pb-6">
             {selectedTechniqueId && videos.length > 0 && (
               <div>
                 <h2 className="text-lg mb-3">
@@ -101,7 +101,7 @@ const JiuJitsuPage = () => {
               </div>
             )}
             
-            <div className="pb-4">
+            <div className="pb-8">
               <TechniqueTree 
                 techniques={techniques}
                 onSelectTechnique={handleSelectTechnique}
@@ -110,7 +110,7 @@ const JiuJitsuPage = () => {
           </div>
         </TabsContent>
         
-        <TabsContent value="chatbot" className="mt-0 mb-16">
+        <TabsContent value="chatbot" className="mt-0 mb-20">
           <DanaherChatbot />
         </TabsContent>
       </Tabs>

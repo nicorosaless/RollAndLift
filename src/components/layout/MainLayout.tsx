@@ -9,7 +9,7 @@ interface MainLayoutProps {
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen bg-trblack text-trwhite">
-      <main className="container mx-auto px-4 pb-20 pt-6">
+      <main className="container mx-auto px-4 pb-24 pt-6">
         {children}
       </main>
       <Navigation />

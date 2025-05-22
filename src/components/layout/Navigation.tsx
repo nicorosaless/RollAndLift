@@ -5,7 +5,7 @@ import { Dumbbell, BookOpen } from 'lucide-react';
 
 const Navigation = () => {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-trgray-dark to-purple-900/90 border-t border-pink-500/20 h-16 flex items-center justify-around shadow-lg">
+    <nav className="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-trgray-dark to-purple-900/90 border-t border-pink-500/20 h-16 flex items-center justify-around shadow-lg z-50">
       <NavLink 
         to="/" 
         className={({ isActive }) => 
@@ -34,4 +34,3 @@ const Navigation = () => {
 };
 
 export default Navigation;
-
