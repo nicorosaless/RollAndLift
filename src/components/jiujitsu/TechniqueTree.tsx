@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight, BookOpen, Video, Users, Shield, GitMerge, GitPullRequest, Zap, Star, Award } from 'lucide-react';
+import { ChevronRight, BookOpen, Video, Users, Shield, GitMerge, GitPullRequest, Zap, Star, Award, Play } from 'lucide-react';
 
 interface Technique {
   id: string;
@@ -17,6 +17,7 @@ interface TechniqueTreeProps {
 
 const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechnique }) => {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const [hoveredTechnique, setHoveredTechnique] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const toggleExpand = (id: string) => {
@@ -67,21 +68,28 @@ const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechn
     return defaultImages[index % defaultImages.length];
   };
 
+  // Function to get YouTube thumbnail
+  const getYouTubeThumbnail = (videoId: string) => {
+    return `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+  };
+
   const renderChildTechniques = (techniques: Technique[], depth = 0) => {
     return (
-      <div className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-4 ${depth > 0 ? 'ml-4' : ''}`}>
+      <div className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mt-5 ${depth > 0 ? 'ml-4' : ''}`}>
         {techniques.map((technique, idx) => (
           <div 
             key={technique.id}
             className={`
-              rounded-lg relative overflow-hidden group aspect-square
+              rounded-lg relative overflow-hidden group transition-all duration-300
               ${technique.videoIds?.length 
-                ? 'cursor-pointer transition-all duration-300 transform hover:scale-105' 
-                : ''
+                ? 'cursor-pointer hover:scale-105 shadow-lg transform hover:shadow-xl' 
+                : 'shadow-md'
               }
               ${depth === 0 ? 'border border-pink-500/20' : ''}
-              shadow-lg backdrop-blur-sm h-auto
+              backdrop-blur-sm
             `}
+            onMouseEnter={() => technique.videoIds?.length && setHoveredTechnique(technique.id)}
+            onMouseLeave={() => setHoveredTechnique(null)}
             onClick={() => {
               if (technique.videoIds?.length) {
                 handleTechniqueClick(technique);
@@ -89,72 +97,87 @@ const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechn
                 toggleExpand(technique.id);
               }
             }}
-            style={{
-              perspective: '1000px',
-              transform: technique.videoIds?.length ? 'translateZ(0)' : 'none'
-            }}
           >
             {/* Image background */}
-            <div className="absolute inset-0 w-full h-full">
+            <div className="relative aspect-video">
               <div className="absolute inset-0 bg-gradient-to-t from-purple-900/90 to-purple-800/40 z-10"></div>
               <img 
                 src={getTechniqueImage(technique.name, idx)} 
                 alt={technique.name}
                 className="w-full h-full object-cover object-center" 
               />
-            </div>
-            
-            {/* Content overlay */}
-            <div className="relative z-20 p-3 h-full flex flex-col justify-between">
-              <div className="flex justify-between items-start">
-                <div className="flex items-center">
-                  <div className="mr-2 bg-gradient-to-br from-purple-800/90 to-pink-700/70 p-1.5 rounded-lg shadow-inner">
-                    {technique.children?.length ? (
-                      getTechniqueIcon(technique.name, idx)
-                    ) : technique.videoIds?.length ? (
-                      <Video size={16} className="text-pink-300" />
-                    ) : null}
+              
+              {/* Content overlay */}
+              <div className="relative z-20 p-3 h-full flex flex-col justify-between">
+                <div className="flex justify-between items-start mb-2">
+                  <div className="flex items-center">
+                    <div className="mr-2 bg-gradient-to-br from-purple-800/90 to-pink-700/70 p-1.5 rounded-lg shadow-inner">
+                      {technique.children?.length ? (
+                        getTechniqueIcon(technique.name, idx)
+                      ) : technique.videoIds?.length ? (
+                        <Video size={16} className="text-pink-300" />
+                      ) : null}
+                    </div>
+                    <h3 className={`text-sm font-medium ${technique.videoIds?.length ? 'text-pink-300' : 'text-white'}`}>
+                      {technique.name}
+                    </h3>
                   </div>
-                  <h3 className={`text-xs font-medium ${technique.videoIds?.length ? 'text-pink-300' : 'text-white'}`}>
-                    {technique.name}
-                  </h3>
+
+                  {technique.children?.length > 0 && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleExpand(technique.id);
+                      }}
+                      className="text-purple-300 hover:text-white focus:outline-none transform transition-transform duration-300"
+                    >
+                      <ChevronRight
+                        size={14}
+                        className={`transform transition-transform duration-300 ${expandedItems.includes(technique.id) ? 'rotate-90' : ''}`}
+                      />
+                    </button>
+                  )}
                 </div>
 
-                {technique.children?.length > 0 && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleExpand(technique.id);
-                    }}
-                    className="text-purple-300 hover:text-white focus:outline-none transform transition-transform duration-300"
-                  >
-                    <ChevronRight
-                      size={14}
-                      className={`transform transition-transform duration-300 ${expandedItems.includes(technique.id) ? 'rotate-90' : ''}`}
-                    />
-                  </button>
+                {technique.videoIds?.length > 0 && (
+                  <div className="mt-auto flex justify-between items-center">
+                    <div className="flex items-center">
+                      <Play size={12} className="text-pink-300 mr-1" />
+                      <span className="text-xs text-pink-200">
+                        {technique.videoIds.length} {technique.videoIds.length === 1 ? 'video' : 'videos'}
+                      </span>
+                    </div>
+                    <span className="bg-gradient-to-r from-pink-600 to-purple-600 text-white text-xs px-2 py-0.5 rounded-full shadow-lg">
+                      Ver
+                    </span>
+                  </div>
                 )}
               </div>
-
-              {technique.videoIds?.length > 0 && (
-                <div className="mt-1.5 flex justify-end">
-                  <span className="bg-gradient-to-r from-pink-600 to-purple-600 text-white text-xs px-2 py-0.5 rounded-full shadow-lg">
-                    {technique.videoIds.length}
-                  </span>
-                </div>
-              )}
-
-              {technique.children?.length > 0 && expandedItems.includes(technique.id) && (
-                <div className="mt-2 animate-fade-in">
-                  {renderChildTechniques(technique.children, depth + 1)}
-                </div>
-              )}
               
-              {/* Decorative elements */}
-              {technique.videoIds?.length > 0 && (
-                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500/70 via-purple-500/70 to-indigo-500/70 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+              {/* Video thumbnail preview on hover */}
+              {hoveredTechnique === technique.id && technique.videoIds && technique.videoIds.length > 0 && (
+                <div className="absolute inset-0 bg-black/60 z-30 flex items-center justify-center animate-fade-in">
+                  <div className="w-full p-2">
+                    <img 
+                      src={getYouTubeThumbnail(technique.videoIds[0])}
+                      alt="Video preview"
+                      className="w-full rounded-md shadow-lg"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="bg-pink-600/80 rounded-full p-3 text-white">
+                        <Play className="h-6 w-6" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
+
+            {technique.children?.length > 0 && expandedItems.includes(technique.id) && (
+              <div className="mt-2 animate-fade-in p-3 bg-purple-900/50 border-t border-pink-500/20">
+                {renderChildTechniques(technique.children, depth + 1)}
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -168,57 +191,43 @@ const TechniqueTree: React.FC<TechniqueTreeProps> = ({ techniques, onSelectTechn
         <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-purple-600/20 to-pink-600/10 rounded-full blur-3xl"></div>
         <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-gradient-to-br from-indigo-600/20 to-purple-600/10 rounded-full blur-3xl"></div>
         
-        {/* Main content - grid layout for main categories */}
-        <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {techniques.map((technique, index) => (
-            <div key={technique.id} className="mb-4 relative">
-              <div className="relative">
-                {/* Main category card with image background - now more square */}
-                <div 
-                  className="flex items-center justify-between p-3 rounded-xl cursor-pointer border-l-4 border-pink-500 shadow-lg backdrop-blur-sm overflow-hidden relative aspect-square"
-                  onClick={() => toggleExpand(technique.id)}
-                >
-                  {/* Background image */}
-                  <div className="absolute inset-0 z-0">
-                    <div className="absolute inset-0 bg-gradient-to-r from-purple-900/90 to-pink-900/70 z-10"></div>
-                    <img 
-                      src={getTechniqueImage(technique.name, index)} 
-                      alt={technique.name}
-                      className="w-full h-full object-cover object-center" 
-                    />
-                  </div>
-
-                  <div className="flex flex-col items-start relative z-20 w-full">
-                    <div className="flex items-center mb-2">
-                      <div className="mr-3 p-2 bg-gradient-to-br from-purple-700/90 to-pink-700/70 rounded-lg shadow-xl">
-                        {getTechniqueIcon(technique.name, index)}
-                      </div>
-                      <div>
-                        <h2 className="text-sm font-bold text-white">
-                          {technique.name}
-                        </h2>
-                        <p className="text-xs text-purple-200/80">
-                          {technique.children?.length || 0} técnicas • {
-                            technique.children?.reduce((count, child) => 
-                              count + (child.videoIds?.length || 0), 0)
-                          } videos
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex justify-end w-full">
-                      <ChevronRight 
-                        size={16}
-                        className={`transform transition-transform duration-300 text-pink-400 relative z-20 ${expandedItems.includes(technique.id) ? 'rotate-90' : ''}`}
-                      />
-                    </div>
-                  </div>
+        {/* Main content - tabbed layout for main categories */}
+        <div className="relative z-10">
+          <div className="flex flex-wrap gap-2 mb-6">
+            {techniques.map((technique, index) => (
+              <button
+                key={technique.id}
+                onClick={() => toggleExpand(technique.id)}
+                className={`
+                  px-4 py-2 rounded-md transition-all duration-300 flex items-center gap-2
+                  ${expandedItems.includes(technique.id) 
+                    ? 'bg-gradient-to-r from-purple-700 to-pink-700 shadow-lg' 
+                    : 'bg-purple-900/30 hover:bg-purple-800/40'
+                  }
+                `}
+              >
+                <div className={`p-1.5 rounded-md ${expandedItems.includes(technique.id) ? 'bg-white/10' : 'bg-purple-700/50'}`}>
+                  {getTechniqueIcon(technique.name, index)}
                 </div>
-              </div>
-              
+                <span className="text-sm font-medium">{technique.name}</span>
+                <ChevronRight 
+                  size={14}
+                  className={`transform transition-transform duration-300 opacity-70
+                    ${expandedItems.includes(technique.id) ? 'rotate-90' : ''}
+                  `}
+                />
+              </button>
+            ))}
+          </div>
+          
+          {/* Display expanded categories */}
+          {techniques.map((technique) => (
+            <div key={`content-${technique.id}`} className="mb-8">
               {expandedItems.includes(technique.id) && technique.children && (
-                <div className="mt-3 animate-fade-in relative">
-                  <div className="absolute -top-2 left-10 h-4 border-l-2 border-pink-500/40"></div>
-                  <div className="absolute top-2 left-10 w-4 border-t-2 border-pink-500/40"></div>
+                <div className="animate-fade-in">
+                  <h3 className="text-lg font-medium mb-4 text-white bg-gradient-to-r from-purple-700/50 to-transparent pl-3 py-2 rounded-l-md">
+                    {technique.name}
+                  </h3>
                   {renderChildTechniques(technique.children)}
                 </div>
               )}
